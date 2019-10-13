@@ -21,6 +21,11 @@ $ apt-get install apache2 php mysql-server
 $ git clone [ссылка на репозиторий]
 $ php index.php
 ```
+### Для автозагрузки
+```
+$ php /path/index.php >> logs.txt
+$ tail -f logs.txt
+```
 База данных, имеющая таблицу следующего вида:
 
 | id | input | output | freq | 
