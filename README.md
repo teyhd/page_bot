@@ -19,6 +19,7 @@
 ```sh
 $ apt-get install apache2 php mysql-server
 $ git clone [ссылка на репозиторий]
+$ php index.php
 ```
 База данных, имеющая таблицу следующего вида:
 
