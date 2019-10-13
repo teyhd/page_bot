@@ -3,7 +3,7 @@ require_once('config.php');
 require_once('db.php');
 $mysqli = new mysqli(DB_HOST, DB_LOGIN, DB_PASS, 'wall_bot');
 require('phpQuery/phpQuery/phpQuery.php');
-echo("Запущен бот\n\n\n");
+echo("\t\x1b[33mЗапущен бот автоответчик. Ожидание сообщений... \x1b[0m \n\n");
 
 $headers = array(
  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -99,7 +99,7 @@ if(preg_match('/act=security\_check/u', $get_my_page['headers'])) {
  // отображаем свою страницу после проверки безопасности
  $get_my_page = getUserPage($my_page_id, $get_auth_location['cookies']);
  
- echo iconv('windows-1251', 'utf-8', $get_my_page['content']);
+ //echo iconv('windows-1251', 'utf-8', $get_my_page['content']);
 } else {
 // echo iconv('windows-1251', 'utf-8', $get_my_page['content']);
     for ($i = 0; $i < 6; $i++) {
@@ -108,14 +108,15 @@ if(preg_match('/act=security\_check/u', $get_my_page['headers'])) {
         $read = $doc->find("#im_dialogs li:eq($i) .nim-dialog--unread")->text();
         $id = $doc->find("#im_dialogs li:eq($i)")->attr('data-list-id');
        // echo(vkApi_usersGet('anuta152000'));
-       if($read!=''){
+       if(($read!='')&&($id!=-178013145)){
            $dialog = mb_strtolower($dialog);         
            $dialog = rtrim($dialog,"!?.,/");
+           $dialog = ltrim($dialog,"!?.,/");
            $dialog = rtrim($dialog, " ");
            $dialog = ltrim($dialog, " ");
            $msg = answer($dialog,$mysqli);
             if($msg!='none') {
-                 echo("Получено: [{$dialog}], от [{$id}] Прочитанно: [$read]\n");
+                 echo("\t\x1b[32mПолучено: [{$dialog}], от [{$id}]\x1b[0m \n");
                  $msg = urlencode($msg);
                  send_msg($msg,$get_auth_location['cookies'],$id);
                  $msg='none';
@@ -123,7 +124,7 @@ if(preg_match('/act=security\_check/u', $get_my_page['headers'])) {
        }
     }
  }
- sleep(5);   
+ sleep(2);   
 }
  
 function getUserPage($id = null, $cookies = null) {
@@ -196,7 +197,7 @@ function send_msg($msg,$cook,$touser){
  'cookies' => $cook
 )); 
 $msg = urldecode($msg);
-echo("Отправленно: [$msg]\n");
+echo("\t\x1b[36mОтправленно: [$msg] \x1b[0m \n\n");
 //var_dump($my);
 }
 
