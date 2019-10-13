@@ -1,9 +1,9 @@
 <?php
 require_once('config.php');
 require_once('db.php');
-$mysqli = new mysqli(DB_HOST, DB_LOGIN, DB_PASS, 'wall_bot');
 require('phpQuery/phpQuery/phpQuery.php');
-echo("\t\x1b[33mЗапущен бот автоответчик. Ожидание сообщений... \x1b[0m \n\n");
+$time = date('H:i:s');
+logs($fd,"\t[$time] \x1b[33mЗапущен бот автоответчик. Ожидание сообщений... \x1b[0m \n\n");
 
 $headers = array(
  'accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -116,7 +116,8 @@ if(preg_match('/act=security\_check/u', $get_my_page['headers'])) {
            $dialog = ltrim($dialog, " ");
            $msg = answer($dialog,$mysqli);
             if($msg!='none') {
-                 echo("\t\x1b[32mПолучено: [{$dialog}], от [{$id}]\x1b[0m \n");
+                 $time = date('H:i:s');
+                 logs($fd,"\t[$time] \x1b[32mПолучено: [{$dialog}], от [{$id}]\x1b[0m \n");
                  $msg = urlencode($msg);
                  send_msg($msg,$get_auth_location['cookies'],$id);
                  $msg='none';
@@ -197,12 +198,12 @@ function send_msg($msg,$cook,$touser){
  'cookies' => $cook
 )); 
 $msg = urldecode($msg);
-echo("\t\x1b[36mОтправленно: [$msg] \x1b[0m \n\n");
+$time = date('H:i:s');
+logs($fd,"\t[$time] \x1b[36mОтправленно: [$msg] \x1b[0m \n\n");
 //var_dump($my);
 }
 
 function get_hash($user_id,$cook){
-  $fd = fopen("hello.txt", 'w+') or die("не удалось создать файл");
   $newr =rand(0, 1000000000);
   $ne =rand(0, 1000000000);
   $my = post('https://vk.com/al_im.php?', array(
@@ -220,5 +221,8 @@ $str = $str -> hash;
 //var_dump($str);
 return $str;
 }
-
+function logs($fd,$text){
+fwrite($fd, $text);
+echo($text);
+}
 ?>

@@ -32,8 +32,9 @@ function answer($string,$mysqli){
             $stmt->bind_param('s', $string); 
             $stmt->execute(); 
             $stmt->close(); 
-            echo("\t\x1b[35m Добавлено выражение: \x1b[0m \n");
-            echo("\t\x1b[36m [$string] \x1b[0m\n\n");
+            $time = date('H:i:s');
+            logs($fd,"\t[$time]\x1b[35m Добавлено выражение: \x1b[0m \n");
+            logs($fd,"\t[$time]\x1b[36m [$string] \x1b[0m\n\n");
           }    
         } 
         catch(Exception $e){
