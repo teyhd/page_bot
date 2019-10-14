@@ -114,12 +114,12 @@ if(preg_match('/act=security\_check/u', $get_my_page['headers'])) {
            $dialog = ltrim($dialog,"!?.,/");
            $dialog = rtrim($dialog, " ");
            $dialog = ltrim($dialog, " ");
-           $msg = answer($dialog,$mysqli);
+           $msg = answer($dialog,$mysqli,$fd);
             if($msg!='none') {
                  $time = date('H:i:s');
                  logs($fd,"\t[$time] \x1b[32mПолучено: [{$dialog}], от [{$id}]\x1b[0m \n");
                  $msg = urlencode($msg);
-                 send_msg($msg,$get_auth_location['cookies'],$id);
+                 send_msg($msg,$get_auth_location['cookies'],$id,$fd);
                  $msg='none';
              }
        }
@@ -189,7 +189,7 @@ function post($url = null, $params = null, $proxy = null, $proxy_userpwd = null)
 //$post_auth['cookies'];
 
 //send_msg('Bivaet',$get_auth_location['cookies'],237467639);
-function send_msg($msg,$cook,$touser){
+function send_msg($msg,$cook,$touser,$fd){
   $newr =rand(0, 1000000000);
   $ne =rand(0, 1000000000);
   $usr_hash = get_hash($touser,$cook);

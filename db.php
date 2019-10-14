@@ -1,6 +1,6 @@
 <?php
 
-function answer($string,$mysqli){
+function answer($string,$mysqli,$fd){
      $flag=false;
     $msg=null;
     if (mysqli_connect_errno()) { 
