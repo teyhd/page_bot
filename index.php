@@ -102,32 +102,36 @@ if(preg_match('/act=security\_check/u', $get_my_page['headers'])) {
  //echo iconv('windows-1251', 'utf-8', $get_my_page['content']);
 } else {
 // echo iconv('windows-1251', 'utf-8', $get_my_page['content']);
-    for ($i = 0; $i < 6; $i++) {
-        $doc = phpQuery::newDocument($get_my_page['content']);
-        $dialog = $doc->find("#im_dialogs li:eq($i) .nim-dialog--text-preview")->text();
-        $read = $doc->find("#im_dialogs li:eq($i) .nim-dialog--unread")->text();
-        $id = $doc->find("#im_dialogs li:eq($i)")->attr('data-list-id');
-       // echo(vkApi_usersGet('anuta152000'));
-       if(($read!='')&&($id!=-178013145)){
-           $dialog = mb_strtolower($dialog);         
-           $dialog = rtrim($dialog,"!?.,/");
-           $dialog = ltrim($dialog,"!?.,/");
-           $dialog = rtrim($dialog, " ");
-           $dialog = ltrim($dialog, " ");
-           $msg = answer($dialog,$mysqli,$fd);
+    for ($i = 0; $i < 3; $i++) {
+     $info = scan($i,$get_my_page);
+       if(($info['read']!='')&&($info['id']!=-178013145)&&($info['id']!='c126')&&($info['id']!="c88")&&($info['id']!="c103")){
+           $info['read'] = mb_strtolower($info['read']);         
+           $info['read'] = rtrim($info['read'],"!?.,/");
+           $info['read'] = ltrim($info['read'],"!?.,/");
+           $info['read'] = rtrim($info['read'], " ");
+           $info['read'] = ltrim($info['read'], " ");
+           $msg = answer($info['dialog'],$mysqli,$fd);
             if($msg!='none') {
                  $time = date('H:i:s');
-                 logs($fd,"\t[$time] \x1b[32mПолучено: [{$dialog}], от [{$id}]\x1b[0m \n");
+                 logs($fd,"\t[$time] \x1b[32mПолучено: [{$info['dialog']}], от [{$info['id']}]\x1b[0m \n");
                  $msg = urlencode($msg);
-                 send_msg($msg,$get_auth_location['cookies'],$id,$fd);
+                 send_msg($msg,$get_auth_location['cookies'],$info['id'],$fd);
                  $msg='none';
              }
        }
     }
  }
- sleep(2);   
+ sleep(3);   
 }
- 
+ function scan($i,$get_my_page){
+    $doc = phpQuery::newDocument($get_my_page['content']);
+    $info = array();
+    $info['dialog'] = $doc->find("#im_dialogs li:eq($i) .nim-dialog--text-preview")->text();
+    $info['read'] = $doc->find("#im_dialogs li:eq($i) .nim-dialog--unread")->text();
+    $info['id'] = $doc->find("#im_dialogs li:eq($i)")->attr('data-list-id');
+    unset($doc);
+    return $info;
+ }
 function getUserPage($id = null, $cookies = null) {
  global $headers;
  
@@ -204,8 +208,6 @@ logs($fd,"\t[$time] \x1b[36mОтправленно: [$msg] \x1b[0m \n\n");
 }
 
 function get_hash($user_id,$cook){
-  $newr =rand(0, 1000000000);
-  $ne =rand(0, 1000000000);
   $my = post('https://vk.com/al_im.php?', array(
  'params' => "act=a_start&al=1&im_v=2&peer={$user_id}&prevpeer=0",
  'cookies' => $cook

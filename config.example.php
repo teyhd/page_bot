@@ -7,5 +7,11 @@ define('DB_HOST','ip');
 define('DB_LOGIN','login');
 define('DB_PASS','pass');
 
+$fd = fopen("/var/www/html/autoans/logs.txt", 'a+') or die("не удалось создать файл");
+$mysqli = new mysqli(DB_HOST, DB_LOGIN, DB_PASS, 'wall_bot');
+
+ 
+ 
+
  
  
