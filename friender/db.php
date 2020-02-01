@@ -18,7 +18,7 @@ function answer($string,$mysqli,$fd){
             $sim = similar_text($string, $msg, $perc);
             $perc = round($perc);   
             
-             if($perc>80){
+             if($perc>75){
                     $ans = get($idex);
                     if($ans!=null) return $ans;
                 }
